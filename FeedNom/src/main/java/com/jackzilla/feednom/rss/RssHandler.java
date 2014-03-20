@@ -22,21 +22,18 @@ public class RssHandler {
     int depth = 0;
     int currentstate = 0;
 
-    RssHandler()
-    {
+    public RssHandler() {
     }
 
     /*
      * getFeed - this returns our feed when all of the parsing is complete
      */
-    RssFeed getFeed()
-    {
+    RssFeed getFeed() {
         return feed;
     }
 
 
-    public void startDocument() throws SAXException
-    {
+    public void startDocument() throws SAXException {
         // initialize our RSSFeed object - this will hold our parsed contents
         feed = new RssFeed();
         // initialize the RSSItem object - you will use this as a crutch to grab
@@ -45,63 +42,53 @@ public class RssHandler {
         feedItem = new RssFeedItem();
 
     }
-    public void endDocument() throws SAXException
-    {
+
+    public void endDocument() throws SAXException {
     }
 
     private String iurl;
-    public void startElement(String namespaceURI, String localName,String qName, Attributes atts) throws SAXException
-    {
+
+    public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
         depth++;
-        if (localName.equals("channel"))
-        {
+        if (localName.equals("channel")) {
             currentstate = 0;
             return;
         }
-        if (localName.equals("url"))
-        {
+        if (localName.equals("url")) {
             currentstate = RSS_IMAGE_URL;
             return;
         }
-        if (qName.equals("itunes:image"))
-        {
+        if (qName.equals("itunes:image")) {
             iurl = atts.getValue(0);
             currentstate = RSS_IMAGE_URL;
             return;
         }
-        if (localName.equals("item"))
-        {
+        if (localName.equals("item")) {
             // create a new item
             feedItem = new RssFeedItem();
             return;
         }
-        if (localName.equals("title"))
-        {
+        if (localName.equals("title")) {
             currentstate = RSS_TITLE;
             return;
         }
-        if (localName.equals("description"))
-        {
+        if (localName.equals("description")) {
             currentstate = RSS_DESCRIPTION;
             return;
         }
-        if (localName.equals("link"))
-        {
+        if (localName.equals("link")) {
             currentstate = RSS_LINK;
             return;
         }
-        if (localName.equals("category"))
-        {
+        if (localName.equals("category")) {
             currentstate = RSS_CATEGORY;
             return;
         }
-        if (localName.equals("pubDate"))
-        {
+        if (localName.equals("pubDate")) {
             currentstate = RSS_PUBDATE;
             return;
         }
-        if (localName.equals("enclosure"))
-        {
+        if (localName.equals("enclosure")) {
             currentstate = RSS_ENCLOSURE;
             return;
         }
@@ -112,11 +99,9 @@ public class RssHandler {
     }
 
     public void endElement(String namespaceURI, String localName, String qName)
-            throws SAXException
-    {
+            throws SAXException {
         depth--;
-        if (localName.equals("item"))
-        {
+        if (localName.equals("item")) {
             // add our item to the list!
             feed.addItem(feedItem);
 //            itemAdded();
@@ -124,23 +109,17 @@ public class RssHandler {
         }
     }
 
-    public void itemAdded()
-    {
+    public void itemAdded() {
     }
 
-    public void characters(char ch[], int start, int length)
-    {
-        String theString = new String(ch,start,length);
+    public void characters(char ch[], int start, int length) {
+        String theString = new String(ch, start, length);
 
-        switch (currentstate)
-        {
+        switch (currentstate) {
             case RSS_TITLE:
-                if (depth == 3)
-                {
+                if (depth == 3) {
                     feed.setTitle(theString);
-                }
-                else if(depth == 4)
-                {
+                } else if (depth == 4) {
                     feedItem.setTitle(theString);
                 }
                 currentstate = 0;
@@ -158,23 +137,17 @@ public class RssHandler {
                 currentstate = 0;
                 break;
             case RSS_PUBDATE:
-                if (depth == 3)
-                {
+                if (depth == 3) {
                     feed.setPubDate(theString);
-                }
-                else if(depth == 4)
-                {
+                } else if (depth == 4) {
                     feedItem.setPubDate(theString);
                 }
                 currentstate = 0;
                 break;
             case RSS_IMAGE_URL:
-                if (iurl != null)
-                {
+                if (iurl != null) {
                     feed.setImage(iurl);
-                }
-                else
-                {
+                } else {
                     feed.setImage(theString);
                 }
                 currentstate = 0;
