@@ -66,7 +66,6 @@ public class ApplicationController {
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
         feedDao = daoSession.getRssFeedDao();
-
     }
 
     public static ApplicationController getInstance() {

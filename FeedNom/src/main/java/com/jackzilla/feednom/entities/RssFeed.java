@@ -16,6 +16,7 @@ public class RssFeed {
     private Long id;
     /** Not-null value. */
     private String title;
+    private String description;
     private java.util.Date lastPublished;
     private String imagePath;
     /** Not-null value. */
@@ -39,9 +40,10 @@ public class RssFeed {
         this.id = id;
     }
 
-    public RssFeed(Long id, String title, java.util.Date lastPublished, String imagePath, String httpSource) {
+    public RssFeed(Long id, String title, String description, java.util.Date lastPublished, String imagePath, String httpSource) {
         this.id = id;
         this.title = title;
+        this.description = description;
         this.lastPublished = lastPublished;
         this.imagePath = imagePath;
         this.httpSource = httpSource;
@@ -69,6 +71,14 @@ public class RssFeed {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public java.util.Date getLastPublished() {

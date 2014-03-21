@@ -7,6 +7,8 @@
     <string name="title_my_feeds">My Feeds</string>
 
     <!--UI Labels-->
+    <string name="rss_feed_card_title">Rss Feed Title</string>
+    <string name="rss_feed_card_short_descripton">A short description of the Rss Feed</string>
     <!--Misc-->
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>

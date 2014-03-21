@@ -8,33 +8,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jackzilla.feednom.R;
+import com.jackzilla.feednom.activity.MainActivity;
 import com.jackzilla.feednom.controller.ApplicationController;
+import com.jackzilla.feednom.entities.RssFeed;
 import com.jackzilla.feednom.event.FragmentAttachedEvent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
-public class MyRssFeedsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-
-    // TODO: Rename and change types of parameters
-    private ArrayList rssFeedList;
+public class MyRssFeedsFragment extends AbstractFragment<MainActivity> {
+    private List rssFeedList;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 ArrayList<T implements Parcelable
      * @return A new instance of fragment MyRssFeedsFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static MyRssFeedsFragment newInstance(ArrayList param1) {
+    public static MyRssFeedsFragment newInstance() {
         MyRssFeedsFragment fragment = new MyRssFeedsFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM1, param1);
-        fragment.setArguments(args);
         return fragment;
     }
     public MyRssFeedsFragment() {
@@ -44,16 +37,17 @@ public class MyRssFeedsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            rssFeedList = getArguments().getParcelableArrayList(ARG_PARAM1);
-        }
+//        rssFeedList = getFeedNomApplication().getApplicationController().getFeedDao().loadAll();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_rss_feeds, container, false);
+        View v = inflater.inflate(R.layout.fragment_my_rss_feeds, container, false);
+        // create a CardGridArrayAdapter object and give it the list
+        // maybe post to the event bus here and do an onEventAsync method to load the feeds from the db
+        // pass the adapter to the event too...
+        return v;
     }
 
     @Override
@@ -66,5 +60,10 @@ public class MyRssFeedsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public MainActivity getActivityA() {
+        return (MainActivity) getActivity();
     }
 }

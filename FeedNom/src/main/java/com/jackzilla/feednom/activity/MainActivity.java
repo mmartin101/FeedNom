@@ -53,7 +53,7 @@ public class MainActivity extends AbstractActivity<MainActivity> implements Navi
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, MyRssFeedsFragment.newInstance(null)).commit();
+        fragmentManager.beginTransaction().replace(R.id.container, MyRssFeedsFragment.newInstance()).commit();
     }
 
     public void restoreActionBar() {

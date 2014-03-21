@@ -25,9 +25,10 @@ public class RssFeedDao extends AbstractDao<RssFeed, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
-        public final static Property LastPublished = new Property(2, java.util.Date.class, "lastPublished", false, "LAST_PUBLISHED");
-        public final static Property ImagePath = new Property(3, String.class, "imagePath", false, "IMAGE_PATH");
-        public final static Property HttpSource = new Property(4, String.class, "httpSource", false, "HTTP_SOURCE");
+        public final static Property Description = new Property(2, String.class, "description", false, "DESCRIPTION");
+        public final static Property LastPublished = new Property(3, java.util.Date.class, "lastPublished", false, "LAST_PUBLISHED");
+        public final static Property ImagePath = new Property(4, String.class, "imagePath", false, "IMAGE_PATH");
+        public final static Property HttpSource = new Property(5, String.class, "httpSource", false, "HTTP_SOURCE");
     };
 
     private DaoSession daoSession;
@@ -48,9 +49,10 @@ public class RssFeedDao extends AbstractDao<RssFeed, Long> {
         db.execSQL("CREATE TABLE " + constraint + "'RSS_FEED' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'TITLE' TEXT NOT NULL ," + // 1: title
-                "'LAST_PUBLISHED' INTEGER," + // 2: lastPublished
-                "'IMAGE_PATH' TEXT," + // 3: imagePath
-                "'HTTP_SOURCE' TEXT NOT NULL );"); // 4: httpSource
+                "'DESCRIPTION' TEXT," + // 2: description
+                "'LAST_PUBLISHED' INTEGER," + // 3: lastPublished
+                "'IMAGE_PATH' TEXT," + // 4: imagePath
+                "'HTTP_SOURCE' TEXT NOT NULL );"); // 5: httpSource
     }
 
     /** Drops the underlying database table. */
@@ -70,16 +72,21 @@ public class RssFeedDao extends AbstractDao<RssFeed, Long> {
         }
         stmt.bindString(2, entity.getTitle());
  
+        String description = entity.getDescription();
+        if (description != null) {
+            stmt.bindString(3, description);
+        }
+ 
         java.util.Date lastPublished = entity.getLastPublished();
         if (lastPublished != null) {
-            stmt.bindLong(3, lastPublished.getTime());
+            stmt.bindLong(4, lastPublished.getTime());
         }
  
         String imagePath = entity.getImagePath();
         if (imagePath != null) {
-            stmt.bindString(4, imagePath);
+            stmt.bindString(5, imagePath);
         }
-        stmt.bindString(5, entity.getHttpSource());
+        stmt.bindString(6, entity.getHttpSource());
     }
 
     @Override
@@ -100,9 +107,10 @@ public class RssFeedDao extends AbstractDao<RssFeed, Long> {
         RssFeed entity = new RssFeed( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // title
-            cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)), // lastPublished
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // imagePath
-            cursor.getString(offset + 4) // httpSource
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // description
+            cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)), // lastPublished
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // imagePath
+            cursor.getString(offset + 5) // httpSource
         );
         return entity;
     }
@@ -112,9 +120,10 @@ public class RssFeedDao extends AbstractDao<RssFeed, Long> {
     public void readEntity(Cursor cursor, RssFeed entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setTitle(cursor.getString(offset + 1));
-        entity.setLastPublished(cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)));
-        entity.setImagePath(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setHttpSource(cursor.getString(offset + 4));
+        entity.setDescription(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setLastPublished(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
+        entity.setImagePath(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setHttpSource(cursor.getString(offset + 5));
      }
     
     /** @inheritdoc */
