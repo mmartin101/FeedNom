@@ -30,6 +30,7 @@ public class FeedNomDaoGenerator {
         rssFeed.addIdProperty();
         rssFeed.addStringProperty("title").notNull();
         rssFeed.addStringProperty("description");
+        rssFeed.addStringProperty("link");
         rssFeed.addDateProperty("lastPublished");
         rssFeed.addStringProperty("imagePath");
         rssFeed.addStringProperty("httpSource").notNull();

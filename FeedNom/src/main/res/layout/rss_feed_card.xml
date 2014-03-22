@@ -4,8 +4,8 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:id="@+id/feed_image"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -15,26 +15,25 @@
         android:focusableInTouchMode="false"
         android:focusable="false"
         android:src="@android:drawable/ic_menu_report_image"
-        android:scaleType="fitXY"
-        android:minHeight="300dp" />
+        android:scaleType="fitCenter" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/rss_feed_card_title"
-        android:layout_alignParentBottom="true"
+        android:text="@string/rss_feed_card_title"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="204dp"
-        android:text="@string/rss_feed_card_title" />
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/feed_image" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/rss_feed_card_short_descripton"
         android:id="@+id/rss_feed_card_description"
-        android:layout_below="@+id/feed_image"
+        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="31dp" />
+        android:layout_below="@+id/rss_feed_card_title" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -45,7 +44,7 @@
         android:layout_alignParentEnd="true"
         android:src="@drawable/ic_menu_overflow_card_dark_normal"
         android:background="@null"
-        android:minHeight="75dp"
-        android:minWidth="75dp"
-        android:scaleType="fitXY" />
+        android:scaleType="fitCenter"
+        android:layout_below="@+id/rss_feed_card_description"
+        android:layout_marginTop="10dp" />
 </RelativeLayout>

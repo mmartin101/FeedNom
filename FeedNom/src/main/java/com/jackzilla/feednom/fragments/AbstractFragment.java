@@ -12,11 +12,11 @@ import com.jackzilla.feednom.controller.ApplicationController;
 public abstract class AbstractFragment<A extends AbstractActivity> extends Fragment {
 
     public void registerWithEventBus() {
-        registerWithEventBus(getActivityA(), 0);
+        registerWithEventBus(0);
     }
 
-    public void registerWithEventBus(A a, int priority) {
-        ApplicationController.getEventBus().register(a, priority);
+    public void registerWithEventBus(int priority) {
+        ApplicationController.getEventBus().register(this, priority);
     }
 
     public void unregisterEventBus() {

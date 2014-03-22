@@ -8,7 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.jackzilla.feednom.R;
+import com.jackzilla.feednom.controller.ApplicationController;
 import com.jackzilla.feednom.event.FragmentAttachedEvent;
+import com.jackzilla.feednom.event.NewRssFeedEvent;
 import com.jackzilla.feednom.fragments.MyRssFeedsFragment;
 import com.jackzilla.feednom.fragments.NavigationDrawerFragment;
 
@@ -86,10 +88,13 @@ public class MainActivity extends AbstractActivity<MainActivity> implements Navi
         if (id == R.id.action_settings) {
             return true;
         }
+        else if(id == R.id.action_example) {
+            ApplicationController.getEventBus().post(new NewRssFeedEvent("http://news.yahoo.com/rss/entertainment"));
+        }
         return super.onOptionsItemSelected(item);
     }
 
     public void onEvent(FragmentAttachedEvent event) {
-        mTitle = getString(event.getTitleId());
+        mTitle = getString(event.getEventObj());
     }
 }

@@ -1,7 +1,6 @@
 package com.jackzilla.feednom.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +11,20 @@ import com.jackzilla.feednom.activity.MainActivity;
 import com.jackzilla.feednom.controller.ApplicationController;
 import com.jackzilla.feednom.entities.RssFeed;
 import com.jackzilla.feednom.event.FragmentAttachedEvent;
+import com.jackzilla.feednom.event.RssFeedsLoadedEvent;
+import com.jackzilla.feednom.fragments.card.RssFeedCard;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardGridView;
+import it.gmariotti.cardslib.library.view.CardListView;
+
 
 public class MyRssFeedsFragment extends AbstractFragment<MainActivity> {
-    private List rssFeedList;
+    private List<Card> rssFeedCards = new ArrayList<Card>();
 
     /**
      * Use this factory method to create a new instance of
@@ -37,7 +43,7 @@ public class MyRssFeedsFragment extends AbstractFragment<MainActivity> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        rssFeedList = getFeedNomApplication().getApplicationController().getFeedDao().loadAll();
+        registerWithEventBus();
     }
 
     @Override
@@ -47,6 +53,13 @@ public class MyRssFeedsFragment extends AbstractFragment<MainActivity> {
         // create a CardGridArrayAdapter object and give it the list
         // maybe post to the event bus here and do an onEventAsync method to load the feeds from the db
         // pass the adapter to the event too...
+        CardGridArrayAdapter arrayAdapter = new CardGridArrayAdapter(getActivityA(), rssFeedCards);
+        CardGridView cardGridView = (CardGridView) v.findViewById(R.id.rss_feed_card_grid_view);
+        if (cardGridView != null) {
+            cardGridView.setAdapter(arrayAdapter);
+        }
+
+        ApplicationController.getEventBus().post(new RssFeedsLoadedEvent(arrayAdapter));
         return v;
     }
 
@@ -65,5 +78,31 @@ public class MyRssFeedsFragment extends AbstractFragment<MainActivity> {
     @Override
     public MainActivity getActivityA() {
         return (MainActivity) getActivity();
+    }
+
+    public void onEventAsync(RssFeedsLoadedEvent event) {
+        CardGridArrayAdapter arrayAdapter = event.getEventObj();
+
+        List<RssFeed> feeds = getFeedNomApplication().getApplicationController().getFeedDao().loadAll();
+        if (feeds.isEmpty()) {
+            RssFeed feed = new RssFeed();
+            feed.setTitle("Dummy Rss Feed");
+            feed.setDescription("Some useful description");
+            feeds.add(feed);
+            feeds.add(feed);
+            feeds.add(feed);
+        }
+        for (RssFeed f : feeds) {
+            RssFeedCard card = new RssFeedCard(getActivityA(), f);
+            rssFeedCards.add(card);
+        }
+        arrayAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterEventBus();
     }
 }

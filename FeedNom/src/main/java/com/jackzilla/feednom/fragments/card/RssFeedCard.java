@@ -46,7 +46,9 @@ public class RssFeedCard extends Card {
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
         mTitleTextView = (TextView) view.findViewById(R.id.rss_feed_card_title);
+        mTitleTextView.setText(mTitle);
         mDescriptionTextView = (TextView) view.findViewById(R.id.rss_feed_card_description);
+        mDescriptionTextView.setText(mDescription);
 
         // get and set image view here
     }

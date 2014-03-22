@@ -1,12 +1,20 @@
 package com.jackzilla.feednom.rss;
 
+import com.jackzilla.feednom.controller.ApplicationController;
+import com.jackzilla.feednom.entities.DaoSession;
+import com.jackzilla.feednom.entities.RssFeed;
+import com.jackzilla.feednom.entities.RssFeedItem;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import java.util.List;
 
 /**
  * Created by maxm on 2/27/14.
  */
-public class RssHandler {
+public class RssHandler extends DefaultHandler {
     RssFeed feed;
     RssFeedItem feedItem;
     String lastElementName = "";
@@ -21,8 +29,10 @@ public class RssHandler {
 
     int depth = 0;
     int currentstate = 0;
+    DaoSession dbSession;
 
     public RssHandler() {
+        dbSession = ApplicationController.getInstance().getDaoSession();
     }
 
     /*
@@ -64,6 +74,10 @@ public class RssHandler {
             return;
         }
         if (localName.equals("item")) {
+            //save the RssFeed to the DB
+            if (feed.getId() == null) {
+                ApplicationController.getInstance().getFeedDao().insert(feed);
+            }
             // create a new item
             feedItem = new RssFeedItem();
             return;
@@ -103,13 +117,12 @@ public class RssHandler {
         depth--;
         if (localName.equals("item")) {
             // add our item to the list!
-            feed.addItem(feedItem);
-//            itemAdded();
+            List feedItems = feed.getFeedItems();
+            feedItem.setFeedId(feed.getId());
+            dbSession.insert(feedItem);
+            feedItems.add(feedItem);
             return;
         }
-    }
-
-    public void itemAdded() {
     }
 
     public void characters(char ch[], int start, int length) {
@@ -125,7 +138,13 @@ public class RssHandler {
                 currentstate = 0;
                 break;
             case RSS_LINK:
-                feedItem.setLink(theString);
+                if (depth == 3) {
+                    feed.setLink(theString);
+                    feed.setHttpSource(theString);
+                }
+                else {
+                    feedItem.setLink(theString);
+                }
                 currentstate = 0;
                 break;
             case RSS_DESCRIPTION:
@@ -138,7 +157,7 @@ public class RssHandler {
                 break;
             case RSS_PUBDATE:
                 if (depth == 3) {
-                    feed.setPubDate(theString);
+                    feed.setLastPublishedDate(theString);
                 } else if (depth == 4) {
                     feedItem.setPubDate(theString);
                 }
@@ -146,9 +165,10 @@ public class RssHandler {
                 break;
             case RSS_IMAGE_URL:
                 if (iurl != null) {
-                    feed.setImage(iurl);
+                    feed.setImagePath(iurl);
+                    iurl = null;
                 } else {
-                    feed.setImage(theString);
+                    feed.setImagePath(theString);
                 }
                 currentstate = 0;
                 break;
