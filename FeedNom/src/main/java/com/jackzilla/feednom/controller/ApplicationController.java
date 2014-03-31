@@ -39,7 +39,6 @@ public class ApplicationController {
     private DaoMaster daoMaster;
     private DaoSession daoSession;
     private RssFeedDao feedDao;
-    // user?
     private final Context context;
 
     public static ApplicationController start(Context c) {
@@ -107,7 +106,7 @@ public class ApplicationController {
 
     private void processRSS(String s) {
         try {
-//            Log.i(tag, "getting the feed " + param);
+            Log.d(TAG, "getting the feed " + s);
             // setup the url
             URL url = new URL(s);
 
@@ -126,19 +125,6 @@ public class ApplicationController {
             InputSource is = new InputSource(url.openStream());
             // perform the synchronous parse
             xmlreader.parse(is);
-//            if (feeds[i].getImage() != null)
-//            {
-//                Log.i(tag,"loading image");
-//                try {
-//                    URL imgurl = new URL(feeds[i].getImage());
-//                    InputStream imgIs = (InputStream) imgurl.getContent();
-//                    Drawable d = Drawable.createFromStream(imgIs, "src");
-//                    feeds[i].setDrawable(d);
-//                } catch (Exception e) {
-//                    Log.i(tag,"something broke :/", e);
-//                    e.printStackTrace();
-//                }
-//            }
         }
         catch (Exception ee) {
             Log.e(TAG, "Exception thrown, there was a problem...", ee);
