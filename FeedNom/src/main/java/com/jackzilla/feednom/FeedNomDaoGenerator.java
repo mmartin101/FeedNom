@@ -12,6 +12,7 @@ import de.greenrobot.daogenerator.ToMany;
 public class FeedNomDaoGenerator {
     public static void main(String[] args) {
         Schema schema = new Schema(1, "com.jackzilla.feednom.entities");
+        schema.enableKeepSectionsByDefault();
 
         addRssFeed(schema);
 
@@ -25,18 +26,18 @@ public class FeedNomDaoGenerator {
 
     private static void addRssFeed(Schema s) {
         Entity rssFeed = s.addEntity("RssFeed");
-        rssFeed.setHasKeepSections(true);
+        rssFeed.setTableName("RSS_FEEDS");
 
         rssFeed.addIdProperty();
         rssFeed.addStringProperty("title").notNull();
         rssFeed.addStringProperty("description");
         rssFeed.addStringProperty("link");
-        rssFeed.addDateProperty("lastPublished");
+        rssFeed.addStringProperty("lastPublished");
         rssFeed.addStringProperty("imagePath");
         rssFeed.addStringProperty("httpSource").notNull();
 
         Entity rssFeedItem = s.addEntity("RssFeedItem");
-        rssFeedItem.setHasKeepSections(true);
+        rssFeedItem.setTableName("RSS_FEED_ITEMS");
 
         rssFeedItem.addIdProperty();
         rssFeedItem.addStringProperty("title");
@@ -45,14 +46,15 @@ public class FeedNomDaoGenerator {
         rssFeedItem.addStringProperty("category");
         rssFeedItem.addStringProperty("enclosure");
         rssFeedItem.addStringProperty("imagePath");
-        Property pubDate = rssFeedItem.addDateProperty("pubDate").getProperty();
+        rssFeedItem.addStringProperty("pubDate");
+
+
         Property feedId = rssFeedItem.addLongProperty("feedId").notNull().getProperty();
         rssFeedItem.addToOne(rssFeed, feedId);
 
 
         ToMany feedToItems = rssFeed.addToMany(rssFeedItem, feedId);
         feedToItems.setName("feedItems");
-        feedToItems.orderAsc(pubDate);
     }
 
 

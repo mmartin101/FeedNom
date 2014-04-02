@@ -31,5 +31,9 @@ proguard/
 .gradle/
 gradle/
 
+# db file
+feednom-db
+
+
 # OS
 .DS_Store

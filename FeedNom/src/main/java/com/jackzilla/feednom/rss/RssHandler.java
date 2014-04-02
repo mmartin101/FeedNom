@@ -148,7 +148,12 @@ public class RssHandler extends DefaultHandler {
                 currentstate = 0;
                 break;
             case RSS_DESCRIPTION:
-                feedItem.setDescription(theString);
+                if (depth == 3) {
+                    feed.setDescription(theString);
+                }
+                else {
+                    feedItem.setDescription(theString);
+                }
                 currentstate = 0;
                 break;
             case RSS_CATEGORY:
@@ -157,7 +162,7 @@ public class RssHandler extends DefaultHandler {
                 break;
             case RSS_PUBDATE:
                 if (depth == 3) {
-                    feed.setLastPublishedDate(theString);
+                    feed.setLastPublished(theString);
                 } else if (depth == 4) {
                     feedItem.setPubDate(theString);
                 }
